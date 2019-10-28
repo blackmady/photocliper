@@ -1,5 +1,5 @@
 const defaultDisplayMap = {};
-module.exports= {
+const utils={
   getType(v) {
     return Object.prototype.toString.call('').slice(8, -1)
   },
@@ -28,6 +28,8 @@ module.exports= {
   toArray(v) {
     return Array.prototype.map.call(v, n => n);
   },
+}
+const u= {
   bind(context, ...methods) {
     methods.forEach(method => {
       context[method] = context[method].bind(context);
@@ -39,76 +41,86 @@ module.exports= {
     });
     context.__proto__ = Object.prototype;
   },
-  extend() {
-    const isArray = this.isArray
-    const isObject = this.isObject
-    const isBoolean = this.isBoolean
-    const isFunction = this.isFunction
-    const isPlainObject = this.isPlainObject
-    let options, name, src, copy, copyIsArray,
-      target = arguments[0] || {},
-      toString = Object.prototype.toString,
-      i = 1,
-      length = arguments.length,
-      deep = false;
+  // extend() {
+  //   let options, name, src, copy, copyIsArray,
+  //     target = arguments[0] || {},
+  //     toString = Object.prototype.toString,
+  //     i = 1,
+  //     length = arguments.length,
+  //     deep = false;
 
-    // 处理深拷贝
-    if (isBoolean(target)) {
-      deep = target;
+  //   // 处理深拷贝
+  //   if (utils.isBoolean(target)) {
+  //     deep = target;
 
-      // Skip the boolean and the target
-      target = arguments[i] || {};
-      i++;
+  //     // Skip the boolean and the target
+  //     target = arguments[i] || {};
+  //     i++;
+  //   }
+
+  //   // Handle case when target is a string or something (possible in deep copy)
+  //   if (!utils.isObject(target) && !utils.isFunction(target)) {
+  //     target = {};
+  //   }
+
+  //   // 如果没有合并的对象，则表示 target 为合并对象，将 target 合并给当前函数的持有者
+  //   if (i === length) {
+  //     target = this;
+  //     i--;
+  //   }
+
+  //   for (; i < length; i++) {
+
+  //     // Only deal with non-null/undefined values
+  //     if ((options = arguments[i]) != null) {
+
+  //       // Extend the base object
+  //       for (name in options) {
+  //         src = target[name];
+  //         copy = options[name];
+
+  //         // 防止死循环
+  //         if (target === copy) {
+  //           continue;
+  //         }
+
+  //         // 深拷贝对象或者数组
+  //         if (deep && copy &&
+  //           ((copyIsArray = utils.isArray(copy)) || utils.isPlainObject(copy))) {
+  //           if (copyIsArray) {
+  //             copyIsArray = false;
+  //             src = src && utils.isArray(src) ? src : [];
+  //           } else {
+  //             src = src && utils.isPlainObject(src) ? src : {};
+  //           }
+  //           target[name] = u.extend(deep, src, copy);
+  //         } else if (copy !== undefined) { // 仅忽略未定义的值
+  //           target[name] = copy;
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   // Return the modified object
+  //   return target;
+  // },
+  extend(target,...objs){
+    if(!objs.length){
+      objs=[target]
+      target={}
     }
-
-    // Handle case when target is a string or something (possible in deep copy)
-    if (!isObject(target) && !isFunction(target)) {
-      target = {};
-    }
-
-    // 如果没有合并的对象，则表示 target 为合并对象，将 target 合并给当前函数的持有者
-    if (i === length) {
-      target = this;
-      i--;
-    }
-
-    for (; i < length; i++) {
-
-      // Only deal with non-null/undefined values
-      if ((options = arguments[i]) != null) {
-
-        // Extend the base object
-        for (name in options) {
-          src = target[name];
-          copy = options[name];
-
-          // 防止死循环
-          if (target === copy) {
-            continue;
-          }
-
-          // 深拷贝对象或者数组
-          if (deep && copy &&
-            ((copyIsArray = isArray(copy)) || isPlainObject(copy))) {
-
-            if (copyIsArray) {
-              copyIsArray = false;
-              src = src && isArray(src) ? src : [];
-            } else {
-              src = src && isPlainObject(src) ? src : {};
-            }
-
-            target[name] = extend(deep, src, copy);
-
-          } else if (copy !== undefined) { // 仅忽略未定义的值
-            target[name] = copy;
-          }
-        }
+    let obj=objs[0]
+    for(let key in obj){
+      let tv=target[key]
+      let ov=obj[key]
+      if(utils.isObject(tv) && utils.isObject(ov)){
+        u.extend(target[key],obj[key])
+        continue
       }
+      target[key]=obj[key]
     }
-
-    // Return the modified object
-    return target;
+    let nobjs=objs.slice(1)
+    return nobjs.length?u.extend(target,...nobjs):target
   },
   createElement(parentNode, className, id, prop) {
     let elem = document.createElement('DIV');
@@ -281,28 +293,31 @@ module.exports= {
 
     return toArray(context.querySelectorAll(selector));
   },
+  
+}
+const w={
   getScale(w1, h1, w2, h2) {
     let sx = w1 / w2;
     let sy = h1 / h2;
     return sx > sy ? sx : sy;
   },
   pointRotate(point, angle) {
-    let radian = angleToRadian(angle),
+    let radian = w.angleToRadian(angle),
       sin = Math.sin(radian),
       cos = Math.cos(radian);
     return {
       x: cos * point.x - sin * point.y,
       y: cos * point.y + sin * point.x
     };
-  }, angleToRadian(angle) {
+  }, 
+  angleToRadian(angle) {
     return angle / 180 * Math.PI;
   },
   loaclToLoacl(layerOne, layerTwo, x, y) {
-    const hideAction = utils.hideAction
     x = x || 0;
     y = y || 0;
     let layerOneRect, layerTwoRect;
-    hideAction([layerOne, layerTwo], function () {
+    u.hideAction([layerOne, layerTwo], function () {
       layerOneRect = layerOne.getBoundingClientRect();
       layerTwoRect = layerTwo.getBoundingClientRect();
     });
@@ -312,11 +327,56 @@ module.exports= {
     };
   },
   globalToLoacl(layer, x, y) {
-    const hideAction = utils.hideAction
     x = x || 0;
     y = y || 0;
     let layerRect;
-    hideAction(layer, function () {
+    u.hideAction(layer, function () {
+      layerRect = layer.getBoundingClientRect();
+    });
+    return {
+      x: x - layerRect.left,
+      y: y - layerRect.top
+    };
+  },
+  // 获取最大缩放比例
+  getScale(w1, h1, w2, h2) {
+    let sx = w1 / w2;
+    let sy = h1 / h2;
+    return sx > sy ? sx : sy;
+  },
+
+  // 计算一个点绕原点旋转后的新坐标
+  pointRotate(point, angle) {
+    let radian = w.angleToRadian(angle),
+      sin = Math.sin(radian),
+      cos = Math.cos(radian);
+    return {
+      x: cos * point.x - sin * point.y,
+      y: cos * point.y + sin * point.x
+    };
+  },
+
+  // 计算layerTwo上的x、y坐标在layerOne上的坐标
+  loaclToLoacl(layerOne, layerTwo, x, y) {
+    x = x || 0;
+    y = y || 0;
+    let layerOneRect, layerTwoRect;
+    u.hideAction([layerOne, layerTwo], function () {
+      layerOneRect = layerOne.getBoundingClientRect();
+      layerTwoRect = layerTwo.getBoundingClientRect();
+    });
+    return {
+      x: layerTwoRect.left - layerOneRect.left + x,
+      y: layerTwoRect.top - layerOneRect.top + y
+    };
+  },
+
+  // 计算相对于窗口的x、y坐标在layer上的坐标
+  globalToLoacl(layer, x, y) {
+    x = x || 0;
+    y = y || 0;
+    let layerRect;
+    u.hideAction(layer, function () {
       layerRect = layer.getBoundingClientRect();
     });
     return {
@@ -324,4 +384,27 @@ module.exports= {
       y: y - layerRect.top
     };
   }
+}
+
+module.exports={
+  getType:utils.getType,
+  isObject:utils.isObject,
+  isNumber:utils.isNumber,
+  isArray:utils.isArray,
+  isBoolean:utils.isBoolean,
+  isFunction:utils.isFunction,
+  isPercent:utils.isPercent,
+  isPlainObject:utils.isPlainObject,
+  toArray:utils.toArray,
+  bind:u.bind,
+  destroy:u.destroy,
+  extend:u.extend,
+  createElement:u.createElement,
+  removeElement:u.removeElement,
+  hideAction:u.hideAction,
+  support:u.support,
+  attr:u.attr,
+  css:u.css,
+  $:u.$,
+  utils:w
 }

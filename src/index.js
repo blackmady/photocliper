@@ -1,25 +1,7 @@
 import Hammer from 'hammerjs';
-// import IScroll from 'iscroll/build/iscroll-zoom';
-import IScroll from 'iscroll';
+import IScroll from 'iscroll/build/iscroll-zoom';
 import lrz from 'lrz';
-// import bind from '@module-factory/utils/bind';
-// import destroy from '@module-factory/utils/destroy';
-// import extend from '@module-factory/utils/extend';
-// import isNumber from '@module-factory/utils/isNumber';
-// import isArray from '@module-factory/utils/isArray';
-// import isPercent from '@module-factory/utils/isPercent';
-// import createElement from '@module-factory/utils/createElement';
-// import removeElement from '@module-factory/utils/removeElement';
-// import hideAction from '@module-factory/utils/hideAction';
-// import support from '@module-factory/utils/support';
-// import css from '@module-factory/utils/css';
-// import attr from '@module-factory/utils/attr';
-// import $ from '@module-factory/utils/$';
-// import * as utils from './utils';
-
-import {bind,destroy,extend,isNumber,isArray,isPercent,createElement,removeElement,hideAction,support,css,attr,$} from './utils'
-import * as utils from './utils';
-
+import { utils,isArray,isNumber,isPercent,bind,destroy, extend,createElement,removeElement,hideAction,support,css,attr,$} from './utils'
 const is_mobile = !!navigator.userAgent.match(/mobile/i),
     is_android = !!navigator.userAgent.match(/android/i),
 
@@ -75,7 +57,7 @@ export default class PhotoClip {
             return;
         }
 
-        this._options = extend(true, {}, defaultOptions, options);
+        this._options = extend({}, defaultOptions, options);
 
         if (prefix === undefined) {
             this._options.errorMsg.noSupport && alert(this._options.errorMsg.noSupport);

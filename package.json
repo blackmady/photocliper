@@ -12,8 +12,8 @@
     "!.DS_Store"
   ],
   "scripts": {
-    "dev": "webpack-dev-server --config node_modules/@module-factory/service/webpack.config/dev.js",
-    "build": "webpack --config node_modules/@module-factory/service/webpack.config/prod.js"
+    "dev": "cross-env USER_CONFIG=mod.config.js webpack-dev-server --config build/dev.conf.js",
+    "build": "cross-env USER_CONFIG=mod.config.js webpack --config build/prod.conf.js"
   },
   "dependencies": {
     "hammerjs": "^2.0.8",
@@ -21,8 +21,20 @@
     "lrz": "^4.9.40"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "@module-factory/service": "latest",
-    "@module-factory/template": "latest"
+    "@module-factory/template": "latest",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-lodash": "^3.3.4",
+    "cross-env": "^6.0.3",
+    "html-webpack-plugin": "^3.2.0",
+    "terser-webpack-plugin": "^1.4.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.0",
+    "webpack-merge": "^4.2.2"
   },
   "repository": {
     "type": "git",
