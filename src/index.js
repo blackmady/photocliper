@@ -440,7 +440,8 @@ export default class PhotoClip {
             maxZoom = this._options.maxZoom;
 
         if (width && height) {
-            iScrollOptions.zoomMin = Math.min(1, utils.getScale(this._clipWidth, this._clipHeight, width, height));
+            iScrollOptions.zoomMin = 0.01;
+            // iScrollOptions.zoomMin = Math.min(1, utils.getScale(this._clipWidth, this._clipHeight, width, height));
             iScrollOptions.zoomMax = maxZoom;
             iScrollOptions.startZoom = Math.min(maxZoom, utils.getScale(this._containerWidth, this._containerHeight, width, height));
         } else {
@@ -1096,34 +1097,37 @@ export default class PhotoClip {
 
 // 设置变换注册点
 function setOrigin($obj, originX, originY) {
+    let prefix2=support('transform')
     originX = (originX || 0).toFixed(2);
     originY = (originY || 0).toFixed(2);
-    css($obj, prefix + 'transform-origin', originX + 'px ' + originY + 'px');
+    css($obj, prefix2 + 'transform-origin', originX + 'px ' + originY + 'px');
 }
 
 // 设置变换坐标与旋转角度
 function setTransform($obj, x, y, angle) {
+    let prefix2=support('transform')
     // translate(x, y) 中坐标的小数点位数过多会引发 bug
     // 因此这里需要保留两位小数
     x = x.toFixed(2);
     y = y.toFixed(2);
     angle = angle.toFixed(2);
 
-    css($obj, prefix + 'transform', 'translateZ(0) translate(' + x + 'px,' + y + 'px) rotate(' + angle + 'deg)');
+    css($obj, prefix2 + 'transform', 'translateZ(0) translate(' + x + 'px,' + y + 'px) rotate(' + angle + 'deg)');
 }
 
 // 设置变换动画
 function setTransition($obj, x, y, angle, dur, fn) {
+    let prefix2=support('transform')
     // 这里需要先读取之前设置好的transform样式，强制浏览器将该样式值渲染到元素
     // 否则浏览器可能出于性能考虑，将暂缓样式渲染，等到之后所有样式设置完成后再统一渲染
     // 这样就会导致之前设置的位移也被应用到动画中
-    css($obj, prefix + 'transform');
+    css($obj, prefix2 + 'transform');
     // 这里应用的缓动与 iScroll 的默认缓动相同
-    css($obj, prefix + 'transition', prefix + 'transform ' + dur + 'ms cubic-bezier(0.1, 0.57, 0.1, 1)');
+    css($obj, prefix2 + 'transition', prefix2 + 'transform ' + dur + 'ms cubic-bezier(0.1, 0.57, 0.1, 1)');
     setTransform($obj, x, y, angle);
 
     setTimeout(function() {
-        css($obj, prefix + 'transition', '');
+        css($obj, prefix2 + 'transition', '');
         fn();
     }, dur);
 }
