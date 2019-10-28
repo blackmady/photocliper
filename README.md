@@ -4,7 +4,7 @@
 - 在移动设备上双指捏合为缩放，双指转动为旋转
 - 在PC设备上鼠标滚轮为缩放，每次双击则顺时针旋转90度
 
-[**Demo**](http://htmlpreview.github.io/?https://github.com/baijunjie/PhotoClip.js/blob/master/demo/index.html)（如果无法打开，请翻墙，或者自行下载体验）
+[**Demo**](https://blackmady.github.io/photocliper/)
 
 
 
@@ -379,8 +379,3 @@ PhotoClip.js 仅仅是一个前端裁图插件，其中用到的压缩是为了�
 由于照片自身尺寸很大，配置越高的手机往往一张照片的尺寸会达到几千的像素宽高，这种图片加载进浏览器后，会占用大量的内存。如果对图片进行移动、缩放、旋转等操作时，浏览器就需要对图片进行重绘，此时就会消耗设备性能。尤其是图片进行旋转操作时，对设备的性能消耗巨大。这一点在安卓设备上尤为突出。
 
 因此，如果出现上述问题，请使用 `options.lrzOption` 选项，限制图片的最大宽高，可以有效的降低浏览器的压力，但副作用是会大大的降低图片的质量。
-
-
-
-# 您的捐助是我最大的动力
-![image](https://github.com/baijunjie/PhotoClip.js/blob/master/donations.jpg)
